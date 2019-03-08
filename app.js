@@ -1,5 +1,7 @@
 const block=require('./block.js');
 const http = require('http');
+const swarm = require('discovery-swarm');
+
 const find = require('local-devices');
 const netList = require('network-list');
 
@@ -17,6 +19,19 @@ netList.scan({}, (err, arr) => {
   });
   console.log(ips.length);
 });
+
+
+var sw = swarm();
+sw.listen(3000);
+sw.join(Math.random().toString()) // can be any id/name/hash
+
+
+sw.on('connection', function(connection, info) { 
+        console.log(info);
+ })
+
+
+
 
 var timestamp = dt.toString();
 const server = http.createServer((req, res) => {
