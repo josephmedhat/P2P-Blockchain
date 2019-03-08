@@ -2,6 +2,11 @@ const block=require('./block.js');
 const blockChain=require('./Blockchain.js');
 const Transaction=require('./Transaction.js');
 const http = require('http');
+const swarm = require('discovery-swarm');
+const port1 =require('get-port');
+var defaults = require('dat-swarm-defaults')
+
+
 const find = require('local-devices');
 const netList = require('network-list');
 const EC=require('elliptic').ec;
@@ -13,6 +18,9 @@ const myWalletAddress=myPrivatekey.getPublic('hex');
 const hostname = '127.0.0.1';
 const port = 3000;
 var ips=[]; 
+var config = defaults({
+  id:Math.random().toString()
+})
 netList.scan({}, (err, arr) => {
   arr.map(function(currentValue, index, arr){
     if(currentValue.alive){
@@ -23,6 +31,28 @@ netList.scan({}, (err, arr) => {
   console.log(ips.length);
 });
 
+
+var sw = swarm(config);
+var test=0;
+(async () => {
+   test=await port1();
+  console.log('Listening to port: ' + test)
+
+  // Will use 3000 if available, otherwise fall back to a random port
+})();
+sw.listen(test);
+
+sw.join('peter') // can be any id/name/hash
+
+
+sw.on('connection', function(connection, info) { 
+        console.log(info);
+ })
+
+
+
+
+var timestamp = dt.toString();
 const server = http.createServer((req, res) => {
    
   res.statusCode = 200;
@@ -57,7 +87,6 @@ console.log("is chain valid? ",bb.Is_validChain());
   console.log(`Server running at http://${hostname}:${port}/`);
 
 });
-
 
 
 
