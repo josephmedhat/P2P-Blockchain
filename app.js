@@ -1,5 +1,6 @@
 const block=require('./block.js');
 const blockChain=require('./Blockchain.js');
+const Transaction=require('./Transaction.js');
 const http = require('http');
 const find = require('local-devices');
 const netList = require('network-list');
@@ -29,9 +30,16 @@ server.listen(port, hostname, () => {
   let x1=new block(1,"30/6/2016","Bassantito");
 
    var bb=new blockChain();
-    bb.Add_Block(x1);
-   // console.log(bb.Chain);
-   console.log("is chain valid? "+bb.Is_validChain());
+   // bb.Add_Block(x1);
+    bb.Create_Transaction(new Transaction('add1','add2',{area:30*40,price:100}));
+    bb.Create_Transaction(new Transaction('add2','add1',{area:30*40,price:50}));
+bb.minePinding_Transactions('add1');
+console.log("the balance",bb.GetPalance('add1'));
+bb.minePinding_Transactions('add2');
+console.log("the balance",bb.GetPalance('add2'));
+
+   //console.log(bb.Chain);
+   //console.log("is chain valid? "+bb.Is_validChain());
   console.log(`Server running at http://${hostname}:${port}/`);
 
 });
