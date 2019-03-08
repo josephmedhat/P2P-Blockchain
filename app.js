@@ -1,6 +1,9 @@
 const block=require('./block.js');
 const http = require('http');
 const swarm = require('discovery-swarm');
+const port1 =require('get-port');
+var defaults = require('dat-swarm-defaults')
+
 
 const find = require('local-devices');
 const netList = require('network-list');
@@ -10,6 +13,9 @@ const hostname = '127.0.0.1';
 const port = 3000;
 var dt = new Date();
 var ips=[]; 
+var config = defaults({
+  id:Math.random().toString()
+})
 netList.scan({}, (err, arr) => {
   arr.map(function(currentValue, index, arr){
     if(currentValue.alive){
@@ -21,9 +27,17 @@ netList.scan({}, (err, arr) => {
 });
 
 
-var sw = swarm();
-sw.listen(3000);
-sw.join(Math.random().toString()) // can be any id/name/hash
+var sw = swarm(config);
+var test=0;
+(async () => {
+   test=await port1();
+  console.log('Listening to port: ' + test)
+
+  // Will use 3000 if available, otherwise fall back to a random port
+})();
+sw.listen(test);
+
+sw.join('peter') // can be any id/name/hash
 
 
 sw.on('connection', function(connection, info) { 
@@ -41,10 +55,7 @@ const server = http.createServer((req, res) => {
   res.end('Hello World\n');
 });
 
-server.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);
 
-});
 
 
 
