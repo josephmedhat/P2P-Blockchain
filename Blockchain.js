@@ -26,14 +26,20 @@ console.log(this.Chain.length);
 
 }*/
 minePinding_Transactions(){
-    let Block= new block("",Date.now,this.PendingTransactions);
+    let Block= new block("",Date.now(),this.PendingTransactions,this.GetlatestBlock().Hash);
     Block.mineBlock(this.Difficulty);
     console.log("mining successfully");
     this.Chain.push(Block);
     this.PendingTransactions=[];
 }
 
-Create_Transaction(transaction){
+Add_Transaction(transaction){
+    if(!transaction.PublicKey_sender||!transaction.PublicKey_reciepient){
+        throw new Error("Transaction must include address of both sender and reciepient");
+    }
+    if(!transaction.Is_validTransaction()){
+        throw new Error("Invalid transaction cannot be add to the chain");
+    }
     this.PendingTransactions.push(transaction);
 }
 
@@ -59,12 +65,13 @@ Is_validChain(){
 for(let i=1;i<this.Chain.length;i++){
     const Current_block=this.Chain[i];
     const Previous_block=this.Chain[i-1];
-    console.log(Current_block);
-    console.log(Current_block.Hash) 
-    console.log(Current_block.calculateHash()) 
+
+    if(!Current_block.ValidTransactions()){
+        return false;
+    }
 
     if(Current_block.Hash!==Current_block.calculateHash()){
-        return false;
+       return false;
     }
     
     if(Current_block.PreviousHash!==Previous_block.Hash){
