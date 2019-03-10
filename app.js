@@ -102,17 +102,13 @@ var myPort=0;
 })();
 
 function getLargest(){
-  allBlockChains.map(chain,index)
-}
-
-function findPeer(id){
-  for (var objId in peers) {
-    if(objId == id)
-      {
-        return peers[id];
+  var max=allBlockChains[0]
+  allBlockChains.map(function(chain,index){
+      if(chain.length()>max.length){
+        max=allBlockChains[index]
       }
-  }
-  return null;
+  })
+  return max;
 }
 
 
@@ -120,44 +116,7 @@ function findPeer(id){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-const server = http.createServer((req, res) => {
-
-  res.statusCode = 200;
-  res.setHeader('Content-Type', 'text/plain');
-  res.end('Hello World\n');
-});
-
-server.listen(port, hostname, () => {
-  let x1=new block(1,"30/6/2016","Bassantito");
+  let x1=new block(1,"30/6/2016","test_block");
 
    var bb=new blockChain();
    // bb.Add_Block(x1);
@@ -182,7 +141,7 @@ console.log("is chain valid? ",bb.Is_validChain());
    //console.log("is chain valid? "+bb.Is_validChain());
   console.log(`Server running at http://${hostname}:${port}/`);
 
-});
+
 
 
 
