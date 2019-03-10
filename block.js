@@ -13,7 +13,7 @@ class Block {
         this.Index +
           this.PreviousHash +
           this.Timestamp +
-          JSON.stringify(this.Data) +
+          JSON.stringify(this.Transactions) +
           this.nonce
       ).toString();
     }
@@ -25,6 +25,14 @@ class Block {
         this.Hash = this.calculateHash();
       }
       console.log("Block mined: " + this.Hash);
+    }
+    ValidTransactions(){
+      for(const transaction of this.Transactions){
+        if(!transaction.Is_validTransaction()){
+          return false;
+        }
+      }
+      return true;
     }
   }
   
